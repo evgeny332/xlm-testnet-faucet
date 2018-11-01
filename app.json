@@ -1,0 +1,13 @@
+{
+    "name": "XLM Testnet Faucet",
+    "description": "Custom Stellar Testnet Faucet",
+    "keywords": [
+      "stellar",
+      "go",
+      "xlm",
+      "faucet"
+    ],
+    "website": "https://github.com/petetlb/xlm-testnet-faucet",
+    "repository": "https://github.com/petetlb/xlm-testnet-faucet"
+  }
+  
