@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"os"
 
 	"github.com/gin-gonic/gin"
 	"github.com/stellar/go/build"
@@ -11,9 +12,25 @@ import (
 	"github.com/stellar/go/keypair"
 )
 
+func getenv(key, fallback string) string {
+	v := os.Getenv(key)
+	if len(v) == 0 {
+		return fallback
+	}
+	return v
+}
+
 func main() {
-	router := gin.Default()
+	port := getenv("PORT", "80")
+	router := gin.New()
+
+	// router.Use(gin.Logger())
+	router.LoadHTMLGlob("templates/*.tmpl.html")
+	router.Static("/static", "static")
 	router.GET("/", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "index.tmpl.html", nil)
+	})
+	router.GET("/faucet", func(c *gin.Context) {
 
 		// Random Keypair
 		pair := generateKeypair()
@@ -33,7 +50,7 @@ func main() {
 		if _, err := horizon.DefaultTestNetClient.LoadAccount(destination); err != nil {
 			c.JSON(500, gin.H{
 				"success": false,
-				"message": err,
+				// "message": err,
 			})
 		}
 		tx, err := build.Transaction(
@@ -79,7 +96,7 @@ func main() {
 			"message": resp,
 		})
 	})
-	router.Run(":80") // listen and serve on 0.0.0.0:8080
+	router.Run(":" + port) // listen and serve on 0.0.0.0:8080
 }
 
 func generateKeypair() *keypair.Full {

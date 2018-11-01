@@ -1,0 +1,1 @@
+web: xlm-testnet-faucet
